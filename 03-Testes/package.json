@@ -1,0 +1,19 @@
+{
+  "name": "03-Testes",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "mocha": "^8.0.1",
+    "nock": "^13.0.0"
+  },
+  "dependencies": {
+    "axios": "^0.19.2"
+  }
+}
