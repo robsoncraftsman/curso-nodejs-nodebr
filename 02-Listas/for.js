@@ -26,6 +26,14 @@ function forOfResults(results) {
   console.timeEnd("forOfResults");
 }
 
+function forEachResults(results) {
+  console.time("forEachResults");
+  results.forEach((pessoa) => {
+    console.log(pessoa.name);
+  });
+  console.timeEnd("forEachResults");
+}
+
 async function main() {
   try {
     const result = await service.obterPessoas("a");
@@ -34,6 +42,7 @@ async function main() {
     forResults(results);
     forInResults(results);
     forOfResults(results);
+    forEachResults(results);
   } catch (error) {
     console.log("Erro ao executar o programa. ", error);
   }
