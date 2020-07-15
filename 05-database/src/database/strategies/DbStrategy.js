@@ -7,7 +7,7 @@ class DbStrategy {
     throw new MethodNotImplementedError();
   }
 
-  retrieve(id) {
+  read(id) {
     throw new MethodNotImplementedError();
   }
 

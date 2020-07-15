@@ -4,19 +4,19 @@ class DatabaseContext {
   }
 
   create(item) {
-    this._strategy.create(item);
+    return this._strategy.create(item);
   }
 
-  retrieve(id) {
-    this._strategy.retrieve(id);
+  read(id) {
+    return this._strategy.read(id);
   }
 
   update(id, item) {
-    this._strategy.update(id, item);
+    return this._strategy.update(id, item);
   }
 
   delete(id) {
-    this._strategy.delete(id);
+    return this._strategy.delete(id);
   }
 }
 

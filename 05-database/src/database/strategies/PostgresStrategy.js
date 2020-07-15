@@ -7,6 +7,7 @@ class PostgresStrategy extends DbStrategy {
 
   create(item) {
     console.log("Item created in Postgres", item);
+    return item;
   }
 }
 

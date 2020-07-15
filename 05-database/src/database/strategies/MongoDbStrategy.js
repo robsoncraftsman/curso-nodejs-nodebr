@@ -7,6 +7,7 @@ class MongoDbStrategy extends DbStrategy {
 
   create(item) {
     console.log("Item created in MongoDb", item);
+    return item;
   }
 }
 
