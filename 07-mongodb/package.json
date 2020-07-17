@@ -1,0 +1,17 @@
+{
+  "name": "07-mongodb",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "test": "mocha src/**/*.test.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "mocha": "^8.0.1"
+  },
+  "dependencies": {
+    "mongoose": "^5.9.25"
+  }
+}
