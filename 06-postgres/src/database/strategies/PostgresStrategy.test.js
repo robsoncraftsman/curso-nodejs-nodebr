@@ -11,29 +11,29 @@ const NEW_POWER = { poder: "Muita Força" };
 describe("PostgresStrategy", function () {
   this.timeout(Infinity);
 
-  this.beforeAll(async function () {
-    await postgresStrategy.clear();
+  this.beforeAll(async () => {
+    await postgresStrategy._connect();
+    await postgresStrategy._clear();
     await postgresStrategy.create(EXISTING_HERO);
   });
 
-  it("Init connection", async function () {
-    const connected = await postgresStrategy._connect();
-    ok(connected);
+  this.afterAll(async () => {
+    await postgresStrategy._close();
   });
 
-  it("#create", async function () {
+  it("#create", async () => {
     const insertedHero = await postgresStrategy.create(NEW_HERO);
     deepEqual(NEW_HERO, insertedHero);
   });
 
-  it("#read", async function () {
+  it("#read", async () => {
     const heroes = await postgresStrategy.read(EXISTING_HERO.id);
     ok(heroes.length === 1);
     const readedHero = heroes[0];
     deepEqual(EXISTING_HERO, readedHero);
   });
 
-  it("#update", async function () {
+  it("#update", async () => {
     await postgresStrategy.create(UPDATE_HERO);
     const [updateCount] = await postgresStrategy.update(
       UPDATE_HERO.id,
@@ -45,18 +45,8 @@ describe("PostgresStrategy", function () {
     deepEqual(expectedHero, updatedHero);
   });
 
-  it("#delete", async function () {
+  it("#delete", async () => {
     const deleteCount = await postgresStrategy.delete(EXISTING_HERO.id);
     equal(deleteCount, 1);
-  });
-
-  it("#clear", async function () {
-    const deleteCount = await postgresStrategy.clear();
-    ok(deleteCount > 0);
-  });
-
-  it("Close connection", async function () {
-    const closed = await postgresStrategy._close();
-    ok(closed);
   });
 });
