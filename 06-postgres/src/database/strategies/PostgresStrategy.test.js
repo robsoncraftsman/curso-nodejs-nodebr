@@ -23,14 +23,14 @@ describe("PostgresStrategy", function () {
 
   it("#create", async () => {
     const insertedHero = await postgresStrategy.create(NEW_HERO);
-    deepEqual(NEW_HERO, insertedHero);
+    deepEqual(insertedHero, NEW_HERO);
   });
 
   it("#read", async () => {
     const heroes = await postgresStrategy.read({ id: EXISTING_HERO.id });
     ok(heroes.length === 1);
     const readedHero = heroes[0];
-    deepEqual(EXISTING_HERO, readedHero);
+    deepEqual(readedHero, EXISTING_HERO);
   });
 
   it("#update", async () => {
@@ -42,7 +42,7 @@ describe("PostgresStrategy", function () {
     equal(updateCount, 1);
     const [updatedHero] = await postgresStrategy.read({ id: UPDATE_HERO.id });
     const expectedHero = { ...UPDATE_HERO, ...NEW_POWER };
-    deepEqual(expectedHero, updatedHero);
+    deepEqual(updatedHero, expectedHero);
   });
 
   it("#delete", async () => {
