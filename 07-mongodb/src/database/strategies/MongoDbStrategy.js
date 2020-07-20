@@ -10,10 +10,6 @@ class MongoDbStrategy extends DbStrategy {
 
   _defineModel() {
     const schema = new mongoose.Schema({
-      id: {
-        type: Number,
-        required: true,
-      },
       nome: {
         type: String,
         required: true,
@@ -51,11 +47,11 @@ class MongoDbStrategy extends DbStrategy {
     return await this._model.find(item).lean();
   }
   async update(id, item) {
-    return await this._model.updateOne({ id }, { $set: item });
+    return await this._model.updateOne({ _id: id }, { $set: item });
   }
 
   async delete(id) {
-    return await this._model.deleteOne({ id });
+    return await this._model.deleteOne({ _id: id });
   }
 }
 
