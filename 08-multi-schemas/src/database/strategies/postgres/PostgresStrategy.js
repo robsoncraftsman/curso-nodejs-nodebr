@@ -21,16 +21,6 @@ class PostgresStrategy extends DbStrategy {
     });
   }
 
-  async _connect(opts) {
-    await this._sequelize.authenticate();
-    return true;
-  }
-
-  async _close() {
-    await this._sequelize.close();
-    return true;
-  }
-
   async _clear() {
     return await this._model.destroy({ where: {} });
   }

@@ -30,13 +30,13 @@ describe("PostgresStrategy", function () {
   this.timeout(Infinity);
 
   this.beforeAll(async () => {
-    await heroisPostgresStrategy._connect();
+    await sequelize.authenticate();
     await heroisPostgresStrategy._clear();
     await heroisPostgresStrategy.create(EXISTING_HERO);
   });
 
   this.afterAll(async () => {
-    await heroisPostgresStrategy._close();
+    await sequelize.close();
   });
 
   it("#create", async () => {
