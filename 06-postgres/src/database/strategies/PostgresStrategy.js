@@ -13,6 +13,7 @@ class PostgresStrategy extends DbStrategy {
       host: "localhost",
       dialect: "postgres",
       quoteIdentifiers: false,
+      logging: false,
       define: {
         freezeTableName: true,
         timestamps: false,

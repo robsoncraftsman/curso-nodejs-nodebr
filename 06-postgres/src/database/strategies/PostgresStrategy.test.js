@@ -1,12 +1,20 @@
-const { equal, deepEqual, ok } = require("assert");
+const { equal, deepEqual, ok, deepStrictEqual } = require("assert");
 
 const PostgresStrategy = require("./PostgresStrategy");
 const postgresStrategy = new PostgresStrategy();
 
-const EXISTING_HERO = { id: 1, nome: "Flash", poder: "Velocidade" };
-const NEW_HERO = { id: 2, nome: "IronMan", poder: "Tech" };
-const UPDATE_HERO = { id: 3, nome: "Hulk", poder: "Força" };
+const EXISTING_HERO = { nome: "Flash", poder: "Velocidade" };
+const NEW_HERO = { nome: "IronMan", poder: "Tech" };
+const UPDATE_HERO = { nome: "Hulk", poder: "Força" };
 const NEW_POWER = { poder: "Muita Força" };
+
+function heroEqual(actual, expected) {
+  const normalizedActual = {
+    nome: actual.nome,
+    poder: actual.poder,
+  };
+  deepStrictEqual(normalizedActual, expected);
+}
 
 describe("PostgresStrategy", function () {
   this.timeout(Infinity);
@@ -23,30 +31,33 @@ describe("PostgresStrategy", function () {
 
   it("#create", async () => {
     const insertedHero = await postgresStrategy.create(NEW_HERO);
-    deepEqual(insertedHero, NEW_HERO);
+    heroEqual(insertedHero, NEW_HERO);
   });
 
   it("#read", async () => {
-    const heroes = await postgresStrategy.read({ id: EXISTING_HERO.id });
+    const heroes = await postgresStrategy.read({ nome: EXISTING_HERO.nome });
     ok(heroes.length === 1);
     const readedHero = heroes[0];
-    deepEqual(readedHero, EXISTING_HERO);
+    heroEqual(readedHero, EXISTING_HERO);
   });
 
   it("#update", async () => {
-    await postgresStrategy.create(UPDATE_HERO);
+    const createdHero = await postgresStrategy.create(UPDATE_HERO);
     const [updateCount] = await postgresStrategy.update(
-      UPDATE_HERO.id,
+      createdHero.id,
       NEW_POWER
     );
     equal(updateCount, 1);
-    const [updatedHero] = await postgresStrategy.read({ id: UPDATE_HERO.id });
+    const [updatedHero] = await postgresStrategy.read({ id: createdHero.id });
     const expectedHero = { ...UPDATE_HERO, ...NEW_POWER };
-    deepEqual(updatedHero, expectedHero);
+    heroEqual(updatedHero, expectedHero);
   });
 
   it("#delete", async () => {
-    const deleteCount = await postgresStrategy.delete(EXISTING_HERO.id);
+    const [existingHero] = await postgresStrategy.read({
+      nome: EXISTING_HERO.nome,
+    });
+    const deleteCount = await postgresStrategy.delete(existingHero.id);
     equal(deleteCount, 1);
   });
 });

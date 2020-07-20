@@ -24,8 +24,9 @@ docker run \
 
 # Iniciar o container com a interface de adminitração de SGBDs
 
-docker run adminer
+docker start adminer
 
-# Entrar no container do postgres para rodar comandos
+# Criar as tabelas
 
-docker exec -it postgres /bin/bash
+Executar o comando de criação de tabela existente no arquivo
+postgres.sql
