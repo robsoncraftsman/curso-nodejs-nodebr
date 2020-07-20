@@ -30,17 +30,16 @@ describe("MongoDbStrategy", function () {
   });
 
   it("#create", async () => {
-    const insertResult = await mongoDbStrategy.create(NEW_HERO);
-    ok(insertResult);
-    const [insertedHero] = await mongoDbStrategy.read({ id: NEW_HERO.id });
-    deepEqual(NEW_HERO, normalizeHero(insertedHero));
+    const insertedHero = await mongoDbStrategy.create(NEW_HERO);
+    ok(insertedHero);
+    deepEqual(normalizeHero(insertedHero), NEW_HERO);
   });
 
   it("#read", async () => {
     const heroes = await mongoDbStrategy.read({ id: EXISTING_HERO.id });
     ok(heroes.length === 1);
     const readedHero = normalizeHero(heroes[0]);
-    deepEqual(EXISTING_HERO, readedHero);
+    deepEqual(readedHero, EXISTING_HERO);
   });
 
   it("#update", async () => {
@@ -52,7 +51,7 @@ describe("MongoDbStrategy", function () {
     equal(updateResult.nModified, 1);
     const [updatedHero] = await mongoDbStrategy.read({ id: UPDATE_HERO.id });
     const expectedHero = { ...UPDATE_HERO, ...NEW_POWER };
-    deepEqual(expectedHero, normalizeHero(updatedHero));
+    deepEqual(normalizeHero(updatedHero), expectedHero);
   });
 
   it("#delete", async () => {

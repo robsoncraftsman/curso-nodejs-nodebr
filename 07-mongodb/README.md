@@ -8,6 +8,10 @@ docker run \
  -d \
  mongo:4
 
+# Iniciar o container com o mongodb
+
+docker start mongodb
+
 # Criar um usuário para aplicação
 
 docker exec -it mongodb \
