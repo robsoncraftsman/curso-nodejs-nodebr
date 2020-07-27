@@ -18,6 +18,10 @@ class DatabaseContext {
   delete(id) {
     return this._strategy.delete(id);
   }
+
+  clear() {
+    return this._strategy.clear();
+  }
 }
 
 module.exports = DatabaseContext;

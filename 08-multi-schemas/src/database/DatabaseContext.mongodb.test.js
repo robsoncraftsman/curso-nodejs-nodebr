@@ -1,8 +1,12 @@
 const { equal, deepStrictEqual, ok } = require("assert");
 
-const MongoDbStrategy = require("./MongoDbStrategy");
-const heroisModel = require("./models/HeroisModel");
-const heroisMongoDbStrategy = new MongoDbStrategy(heroisModel);
+const DatabaseContext = require("./DatabaseContext");
+const MongoDbStrategy = require("./strategies/mongodb/MongoDbStrategy");
+const heroisModel = require("./strategies/mongodb/models/HeroisModel");
+
+const mongoDbDatabaseContext = new DatabaseContext(
+  new MongoDbStrategy(heroisModel)
+);
 
 const EXISTING_HERO = { nome: "Flash", poder: "Velocidade" };
 const NEW_HERO = { nome: "IronMan", poder: "Tech" };
@@ -18,13 +22,13 @@ function heroEqual(actual, expected) {
   deepStrictEqual(normalizedActual, expected);
 }
 
-describe("MongoDbStrategy", function () {
+describe("DatabaseContext -> MongoDB", function () {
   this.timeout(Infinity);
 
   this.beforeAll(async () => {
     await MongoDbStrategy.connect("mongodb://user:pwd@localhost:27217/herois");
-    await heroisMongoDbStrategy.clear();
-    await heroisMongoDbStrategy.create(EXISTING_HERO);
+    await mongoDbDatabaseContext.clear();
+    await mongoDbDatabaseContext.create(EXISTING_HERO);
   });
 
   this.afterAll(async () => {
@@ -32,13 +36,13 @@ describe("MongoDbStrategy", function () {
   });
 
   it("#create", async () => {
-    const insertedHero = await heroisMongoDbStrategy.create(NEW_HERO);
+    const insertedHero = await mongoDbDatabaseContext.create(NEW_HERO);
     ok(insertedHero);
     heroEqual(insertedHero, NEW_HERO);
   });
 
   it("#read", async () => {
-    const heroes = await heroisMongoDbStrategy.read({
+    const heroes = await mongoDbDatabaseContext.read({
       nome: EXISTING_HERO.nome,
     });
     ok(heroes.length === 1);
@@ -47,13 +51,13 @@ describe("MongoDbStrategy", function () {
   });
 
   it("#update", async () => {
-    const createdHero = await heroisMongoDbStrategy.create(UPDATE_HERO);
-    const updateResult = await heroisMongoDbStrategy.update(
+    const createdHero = await mongoDbDatabaseContext.create(UPDATE_HERO);
+    const updateResult = await mongoDbDatabaseContext.update(
       createdHero._id,
       UPDATE_HERO_NEW_POWER
     );
     equal(updateResult.nModified, 1);
-    const [updatedHero] = await heroisMongoDbStrategy.read({
+    const [updatedHero] = await mongoDbDatabaseContext.read({
       _id: createdHero.id,
     });
     const expectedHero = { ...UPDATE_HERO, ...UPDATE_HERO_NEW_POWER };
@@ -61,9 +65,9 @@ describe("MongoDbStrategy", function () {
   });
 
   it("#delete", async () => {
-    const createdHero = await heroisMongoDbStrategy.create(DELETE_HERO);
+    const createdHero = await mongoDbDatabaseContext.create(DELETE_HERO);
     ok(createdHero);
-    const deleteResult = await heroisMongoDbStrategy.delete(createdHero._id);
+    const deleteResult = await mongoDbDatabaseContext.delete(createdHero._id);
     equal(deleteResult.deletedCount, 1);
   });
 });

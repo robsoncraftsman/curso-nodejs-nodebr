@@ -21,10 +21,6 @@ class PostgresStrategy extends DbStrategy {
     });
   }
 
-  async _clear() {
-    return await this._model.destroy({ where: {} });
-  }
-
   async create(item) {
     const model = await this._model.create(item, { raw: true });
     return model.dataValues;
@@ -40,6 +36,10 @@ class PostgresStrategy extends DbStrategy {
 
   async delete(id) {
     return await this._model.destroy({ where: { id } });
+  }
+
+  async clear() {
+    return await this._model.destroy({ where: {} });
   }
 }
 

@@ -18,6 +18,10 @@ class DbStrategy {
   delete(id) {
     throw new MethodNotImplementedError();
   }
+
+  clear(id) {
+    throw new MethodNotImplementedError();
+  }
 }
 
 module.exports = DbStrategy;
