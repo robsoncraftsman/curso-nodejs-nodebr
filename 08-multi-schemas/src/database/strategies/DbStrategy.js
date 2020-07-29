@@ -7,7 +7,7 @@ class DbStrategy {
     throw new MethodNotImplementedError();
   }
 
-  async read(id) {
+  async read(item) {
     throw new MethodNotImplementedError();
   }
 

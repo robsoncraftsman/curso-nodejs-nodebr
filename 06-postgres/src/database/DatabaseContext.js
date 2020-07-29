@@ -7,8 +7,8 @@ class DatabaseContext {
     this._strategy.create(item);
   }
 
-  retrieve(id) {
-    this._strategy.retrieve(id);
+  read(item) {
+    this._strategy.read(item);
   }
 
   update(id, item) {

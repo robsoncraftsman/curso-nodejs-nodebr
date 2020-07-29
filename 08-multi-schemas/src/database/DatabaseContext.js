@@ -7,8 +7,8 @@ class DatabaseContext {
     return this._strategy.create(item);
   }
 
-  async read(id) {
-    return this._strategy.read(id);
+  async read(item) {
+    return this._strategy.read(item);
   }
 
   async update(id, item) {
