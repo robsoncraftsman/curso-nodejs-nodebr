@@ -1,5 +1,7 @@
 const Hapi = require("@hapi/hapi");
 const Joi = require("@hapi/joi");
+const Boom = require("@hapi/boom");
+
 const HeroRoutes = require("./routes/HeroRoutes");
 
 const DatabaseContext = require("../database/DatabaseContext");
@@ -10,6 +12,19 @@ const mongoDbDatabaseContext = new DatabaseContext(mongoDbStrategy);
 
 const server = new Hapi.Server({
   port: 3000,
+  routes: {
+    validate: {
+      failAction: async (request, h, error) => {
+        if (process.env.NODE_ENV === "production") {
+          console.log("Bad Request: " + error.message);
+          throw Boom.badRequest();
+        } else {
+          //console.error(error);
+          throw error;
+        }
+      },
+    },
+  },
 });
 
 server.validator(Joi);
