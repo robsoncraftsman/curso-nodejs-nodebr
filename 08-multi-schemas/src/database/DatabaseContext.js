@@ -3,23 +3,23 @@ class DatabaseContext {
     this._strategy = strategy;
   }
 
-  create(item) {
+  async create(item) {
     return this._strategy.create(item);
   }
 
-  read(id) {
+  async read(id) {
     return this._strategy.read(id);
   }
 
-  update(id, item) {
+  async update(id, item) {
     return this._strategy.update(id, item);
   }
 
-  delete(id) {
+  async delete(id) {
     return this._strategy.delete(id);
   }
 
-  clear() {
+  async clear() {
     return this._strategy.clear();
   }
 }

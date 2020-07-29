@@ -3,23 +3,23 @@ const MethodNotImplementedError = require("../../MethodNotImplementedError");
 class DbStrategy {
   constructor() {}
 
-  create(item) {
+  async create(item) {
     throw new MethodNotImplementedError();
   }
 
-  read(id) {
+  async read(id) {
     throw new MethodNotImplementedError();
   }
 
-  update(id, item) {
+  async update(id, item) {
     throw new MethodNotImplementedError();
   }
 
-  delete(id) {
+  async delete(id) {
     throw new MethodNotImplementedError();
   }
 
-  clear(id) {
+  async clear(id) {
     throw new MethodNotImplementedError();
   }
 }
