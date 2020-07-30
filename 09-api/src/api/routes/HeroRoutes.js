@@ -34,7 +34,7 @@ class HeroRoutes extends BaseRoutes {
       config: {
         validate: {
           params: Joi.object({
-            id: Joi.number(),
+            id: Joi.string().required(),
           }),
         },
       },
@@ -70,6 +70,78 @@ class HeroRoutes extends BaseRoutes {
           filter.nome = { $regex: nome, $options: "i" };
         }
         return await this._databaseContext.read(filter, skip, limit);
+      },
+    };
+  }
+
+  update() {
+    return {
+      path: "/herois/{id}",
+      method: "POST",
+      config: {
+        validate: {
+          params: {
+            id: Joi.string().required(),
+          },
+          payload: Joi.object({
+            nome: Joi.string().min(3).max(100).required(),
+            poder: Joi.string().min(3).max(100).required(),
+          }),
+        },
+      },
+      handler: async (request) => {
+        const { id } = request.params;
+        const updateValues = {};
+        const { nome, poder } = request.payload;
+        return await this._databaseContext.update(id, { nome, poder });
+      },
+    };
+  }
+
+  patch() {
+    return {
+      path: "/herois/{id}",
+      method: "PATCH",
+      config: {
+        validate: {
+          params: {
+            id: Joi.string().required(),
+          },
+          payload: Joi.object({
+            nome: Joi.string().min(3).max(100),
+            poder: Joi.string().min(3).max(100),
+          }),
+        },
+      },
+      handler: async (request) => {
+        const { id } = request.params;
+        const updateValues = {};
+        const { nome, poder } = request.payload;
+        if (nome) {
+          updateValues.nome = nome;
+        }
+        if (poder) {
+          updateValues.poder = poder;
+        }
+        return await this._databaseContext.update(id, updateValues);
+      },
+    };
+  }
+
+  delete() {
+    return {
+      path: "/herois/{id}",
+      method: "DELETE",
+      config: {
+        validate: {
+          params: {
+            id: Joi.string().required(),
+          },
+        },
+      },
+      handler: async (request) => {
+        const { id } = request.params;
+        return await this._databaseContext.delete(id);
       },
     };
   }
