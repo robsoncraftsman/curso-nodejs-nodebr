@@ -40,7 +40,7 @@ async function findHero(id) {
   }
 }
 
-describe.only("API Heroes test suite", function () {
+describe("API Heroes test suite", function () {
   this.timeout(Infinity);
 
   this.beforeAll(async () => {
