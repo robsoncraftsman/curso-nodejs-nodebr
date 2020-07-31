@@ -40,7 +40,7 @@ async function findHero(id) {
   }
 }
 
-describe.only("API Heroes test suite", function () {
+describe("API Heroes test suite", function () {
   this.timeout(Infinity);
 
   this.beforeAll(async () => {
@@ -164,7 +164,7 @@ describe.only("API Heroes test suite", function () {
   it("update /herois/id", async () => {
     const updatedHero = { ...UPDATE_HERO, ...UPDATE_HERO_NEW_POWER };
     const result = await server.inject({
-      method: "POST",
+      method: "PUT",
       url: `/herois/${UPDATE_ID}`,
       payload: updatedHero,
     });

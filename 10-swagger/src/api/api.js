@@ -30,7 +30,7 @@ function mapRoutes(instance, methods) {
 
 async function startServer() {
   const server = new Hapi.Server({
-    debug: { request: ["error"] },
+    //debug: { request: ["error"] },
     port: 3000,
     routes: {
       validate: {

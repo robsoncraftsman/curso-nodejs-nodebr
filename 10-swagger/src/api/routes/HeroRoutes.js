@@ -1,6 +1,7 @@
-const BaseRoutes = require("./BaseRoutes");
 const Joi = require("@hapi/joi");
 const Boom = require("@hapi/boom");
+
+const BaseRoutes = require("./BaseRoutes");
 
 class HeroRoutes extends BaseRoutes {
   constructor(databaseContext) {
@@ -12,7 +13,7 @@ class HeroRoutes extends BaseRoutes {
     return {
       path: "/herois",
       method: "POST",
-      config: {
+      options: {
         tags: ["api"],
         description: "Cadastrar Heróis",
         notes: "Permite a criação de um novo herói",
@@ -34,7 +35,7 @@ class HeroRoutes extends BaseRoutes {
     return {
       path: "/herois/{id}",
       method: "GET",
-      config: {
+      options: {
         tags: ["api"],
         description: "Consultar Heróis pelo ID",
         notes: "Permite consultar um herói, passando seu ID",
@@ -60,7 +61,7 @@ class HeroRoutes extends BaseRoutes {
     return {
       path: "/herois",
       method: "GET",
-      config: {
+      options: {
         tags: ["api"],
         description: "Consultar Heróis",
         notes:
@@ -87,8 +88,8 @@ class HeroRoutes extends BaseRoutes {
   update() {
     return {
       path: "/herois/{id}",
-      method: "POST",
-      config: {
+      method: "PUT",
+      options: {
         tags: ["api"],
         description: "Atualizar Heróis (Completo)",
         notes:
@@ -116,7 +117,7 @@ class HeroRoutes extends BaseRoutes {
     return {
       path: "/herois/{id}",
       method: "PATCH",
-      config: {
+      options: {
         tags: ["api"],
         description: "Atualizar Heróis (Parcial)",
         notes:
@@ -150,7 +151,7 @@ class HeroRoutes extends BaseRoutes {
     return {
       path: "/herois/{id}",
       method: "DELETE",
-      config: {
+      options: {
         tags: ["api"],
         description: "Excluir Heróis",
         notes: "Permite a exclusão de um herói, passando seu ID",
