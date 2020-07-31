@@ -12,7 +12,7 @@ class HeroRoutes extends BaseRoutes {
     return {
       path: "/herois",
       method: "POST",
-      config: {
+      options: {
         validate: {
           payload: Joi.object({
             nome: Joi.string().min(3).max(100).required(),
@@ -31,7 +31,7 @@ class HeroRoutes extends BaseRoutes {
     return {
       path: "/herois/{id}",
       method: "GET",
-      config: {
+      options: {
         validate: {
           params: Joi.object({
             id: Joi.string().required(),
@@ -54,7 +54,7 @@ class HeroRoutes extends BaseRoutes {
     return {
       path: "/herois",
       method: "GET",
-      config: {
+      options: {
         validate: {
           query: Joi.object({
             skip: Joi.number().default(0),
@@ -78,7 +78,7 @@ class HeroRoutes extends BaseRoutes {
     return {
       path: "/herois/{id}",
       method: "POST",
-      config: {
+      options: {
         validate: {
           params: {
             id: Joi.string().required(),
@@ -102,7 +102,7 @@ class HeroRoutes extends BaseRoutes {
     return {
       path: "/herois/{id}",
       method: "PATCH",
-      config: {
+      options: {
         validate: {
           params: {
             id: Joi.string().required(),
@@ -132,7 +132,7 @@ class HeroRoutes extends BaseRoutes {
     return {
       path: "/herois/{id}",
       method: "DELETE",
-      config: {
+      options: {
         validate: {
           params: {
             id: Joi.string().required(),
