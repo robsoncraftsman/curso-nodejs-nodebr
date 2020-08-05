@@ -1,10 +1,11 @@
-const BaseRoutes = require("./BaseRoutes");
 const Joi = require("@hapi/joi");
 const Boom = require("@hapi/boom");
+const BaseRoutes = require("./BaseRoutes");
+const PasswordHelper = require("../../helpers/PasswordHelper");
 
 const USER = {
   username: "teste",
-  password: "123",
+  password: "$2b$10$hY9QoBUGUelcvQfAtNGq8eEuqPQIHMot7VPxl4M7bGIauz/O1OwRK",
 };
 
 const Jwt = require("jsonwebtoken");
@@ -31,12 +32,14 @@ class AuthRoutes extends BaseRoutes {
           },
         },
       },
-      handler: (request, h) => {
+      handler: async (request, h) => {
         const { username, password } = request.payload;
-        if (
-          username.toLowerCase() === USER.username &&
-          password === USER.password
-        ) {
+        const isValidUser = username.toLowerCase() === USER.username;
+        const isValidPassword = await PasswordHelper.comparePassword(
+          password,
+          USER.password
+        );
+        if (isValidUser && isValidPassword) {
           return {
             token: Jwt.sign(
               {
@@ -58,6 +61,11 @@ class AuthRoutes extends BaseRoutes {
       method: "GET",
       options: {
         auth: "jwt",
+        validate: {
+          headers: Joi.object({
+            authorization: Joi.string().required(),
+          }).unknown(),
+        },
       },
       handler: function (request, h) {
         const response = h.response({ result: "You are authorized" });

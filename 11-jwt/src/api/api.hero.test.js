@@ -31,7 +31,7 @@ async function findHero(id) {
     method: "GET",
     url: `/herois/${id}`,
     headers: {
-      Authorization: TOKEN_JWT,
+      authorization: TOKEN_JWT,
     },
   });
   equal(result.statusCode, 200);
@@ -90,7 +90,7 @@ describe("API Heroes test suite", function () {
       method: "GET",
       url: `/herois?nome=${EXISTING_HERO.nome}`,
       headers: {
-        Authorization: TOKEN_JWT,
+        authorization: TOKEN_JWT,
       },
     });
     const statusCode = result.statusCode;
@@ -106,7 +106,7 @@ describe("API Heroes test suite", function () {
       method: "GET",
       url: "/herois",
       headers: {
-        Authorization: TOKEN_JWT,
+        authorization: TOKEN_JWT,
       },
     });
     const statusCode = result.statusCode;
@@ -122,7 +122,7 @@ describe("API Heroes test suite", function () {
       method: "GET",
       url: `/herois?skip=${SKIP}&limit=${LIMIT}`,
       headers: {
-        Authorization: TOKEN_JWT,
+        authorization: TOKEN_JWT,
       },
     });
     const statusCode = result.statusCode;
@@ -139,7 +139,7 @@ describe("API Heroes test suite", function () {
       method: "GET",
       url: `/herois?nome=${BATCH_HERO.nome}&skip=${SKIP}&limit=${LIMIT}`,
       headers: {
-        Authorization: TOKEN_JWT,
+        authorization: TOKEN_JWT,
       },
     });
     const statusCode = result.statusCode;
@@ -154,7 +154,7 @@ describe("API Heroes test suite", function () {
       method: "GET",
       url: `/herois?xpto=${EXISTING_HERO.nome}`,
       headers: {
-        Authorization: TOKEN_JWT,
+        authorization: TOKEN_JWT,
       },
     });
     equal(result.statusCode, 400);
@@ -167,7 +167,7 @@ describe("API Heroes test suite", function () {
       method: "GET",
       url: `/herois/${EXISTING_ID}`,
       headers: {
-        Authorization: TOKEN_JWT,
+        authorization: TOKEN_JWT,
       },
     });
     equal(result.statusCode, 200);
@@ -182,7 +182,7 @@ describe("API Heroes test suite", function () {
       method: "GET",
       url: `/herois/000000000000000000000000`,
       headers: {
-        Authorization: TOKEN_JWT,
+        authorization: TOKEN_JWT,
       },
     });
     equal(result.statusCode, 200);
@@ -197,7 +197,7 @@ describe("API Heroes test suite", function () {
       url: "/herois",
       payload: NEW_HERO,
       headers: {
-        Authorization: TOKEN_JWT,
+        authorization: TOKEN_JWT,
       },
     });
     equal(result.statusCode, 200);
@@ -211,7 +211,7 @@ describe("API Heroes test suite", function () {
       method: "PUT",
       url: `/herois/${UPDATE_ID}`,
       headers: {
-        Authorization: TOKEN_JWT,
+        authorization: TOKEN_JWT,
       },
       payload: updatedHero,
     });
@@ -228,7 +228,7 @@ describe("API Heroes test suite", function () {
       method: "PATCH",
       url: `/herois/${UPDATE_ID}`,
       headers: {
-        Authorization: TOKEN_JWT,
+        authorization: TOKEN_JWT,
       },
       payload: UPDATE_HERO_PATCH,
     });
@@ -244,7 +244,7 @@ describe("API Heroes test suite", function () {
       method: "DELETE",
       url: `/herois/${DELETE_ID}`,
       headers: {
-        Authorization: TOKEN_JWT,
+        authorization: TOKEN_JWT,
       },
     });
     equal(result.statusCode, 200);

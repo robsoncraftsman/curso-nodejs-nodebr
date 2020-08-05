@@ -8,7 +8,6 @@ const Boom = require("@hapi/boom");
 const Inert = require("@hapi/inert");
 const Vision = require("@hapi/vision");
 const HapiSwagger = require("hapi-swagger");
-const Jwt = require("jsonwebtoken");
 const HapiJwt = require("hapi-auth-jwt2");
 
 const HeroRoutes = require("./routes/HeroRoutes");
@@ -33,8 +32,8 @@ function mapRoutes(instance, methods) {
   return methods.map((method) => instance[method]());
 }
 
-async function startServer() {
-  const server = new Hapi.Server({
+function createServer() {
+  return new Hapi.Server({
     //debug: { request: ["error"] },
     port: 3000,
     routes: {
@@ -50,10 +49,14 @@ async function startServer() {
       },
     },
   });
+}
 
+function configureValidator(server) {
   server.validator(Joi);
+}
 
-  await server.register([
+function registerPlugins(server) {
+  return server.register([
     HapiJwt,
     Inert,
     Vision,
@@ -62,7 +65,9 @@ async function startServer() {
       options: swaggerConfig,
     },
   ]);
+}
 
+function configureAuthentication(server) {
   server.auth.strategy("jwt", "jwt", {
     key: JWT_SECRET,
     validate: async (decoded, request, h) => {
@@ -73,11 +78,25 @@ async function startServer() {
   });
 
   server.auth.default("jwt");
+}
 
+function configureRoutes(server) {
   server.route([
     ...mapRoutes(new HeroRoutes(mongoDbDatabaseContext), HeroRoutes.routes()),
     ...mapRoutes(new AuthRoutes(JWT_SECRET), AuthRoutes.routes()),
   ]);
+}
+
+async function startServer() {
+  const server = createServer();
+
+  configureValidator(server);
+
+  await registerPlugins(server);
+
+  configureAuthentication(server);
+
+  configureRoutes(server);
 
   await server.start();
 

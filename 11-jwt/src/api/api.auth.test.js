@@ -1,5 +1,6 @@
-const { ok, equal, deepStrictEqual } = require("assert");
+const { ok, strictEqual, deepStrictEqual } = require("assert");
 const api = require("./api");
+
 let server = {};
 
 async function login() {
@@ -12,7 +13,7 @@ async function login() {
     },
   });
 
-  equal(result.statusCode, 200);
+  strictEqual(result.statusCode, 200);
   return JSON.parse(result.payload).token;
 }
 
@@ -28,17 +29,9 @@ describe("API Auth test suite", function () {
   });
 
   it("#login - 200", async () => {
-    const result = await server.inject({
-      method: "POST",
-      url: "/login",
-      payload: {
-        username: "teste",
-        password: "123",
-      },
-    });
+    const token = await login();
 
-    equal(result.statusCode, 200);
-    ok(JSON.parse(result.payload).token.length > 10);
+    ok(token.length > 10);
   });
 
   it("#login - 401", async () => {
@@ -47,12 +40,12 @@ describe("API Auth test suite", function () {
       url: "/login",
       payload: {
         username: "nao_existe",
-        password: "123",
+        password: "12345678",
       },
     });
 
-    equal(result.statusCode, 401);
-    equal(JSON.parse(result.payload).error, "Unauthorized");
+    strictEqual(result.statusCode, 401);
+    strictEqual(JSON.parse(result.payload).error, "Unauthorized");
   });
 
   it("#test - deve dar acesso negado", async () => {
@@ -60,7 +53,11 @@ describe("API Auth test suite", function () {
       method: "GET",
       url: "/test",
     });
-    equal(result.statusCode, 401);
+    strictEqual(result.statusCode, 401);
+    strictEqual(
+      result.payload,
+      '{"statusCode":401,"error":"Unauthorized","message":"Missing authentication"}'
+    );
   });
 
   it("#test - deve acessar a URL", async () => {
@@ -69,10 +66,10 @@ describe("API Auth test suite", function () {
       method: "GET",
       url: "/test",
       headers: {
-        Authorization: tokenJwt,
+        authorization: tokenJwt,
       },
     });
-    equal(result.statusCode, 200);
+    strictEqual(result.statusCode, 200);
     deepStrictEqual(JSON.parse(result.payload), {
       result: "You are authorized",
     });

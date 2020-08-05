@@ -19,6 +19,9 @@ class HeroRoutes extends BaseRoutes {
         description: "Cadastrar Heróis",
         notes: "Permite a criação de um novo herói",
         validate: {
+          headers: Joi.object({
+            authorization: Joi.string().required(),
+          }).unknown(),
           payload: Joi.object({
             nome: Joi.string().min(3).max(100).required(),
             poder: Joi.string().min(3).max(100).required(),
@@ -42,6 +45,9 @@ class HeroRoutes extends BaseRoutes {
         description: "Consultar Heróis pelo ID",
         notes: "Permite consultar um herói, passando seu ID",
         validate: {
+          headers: Joi.object({
+            authorization: Joi.string().required(),
+          }).unknown(),
           params: Joi.object({
             id: Joi.string().required(),
           }),
@@ -70,6 +76,9 @@ class HeroRoutes extends BaseRoutes {
         notes:
           "Retorna uma lista de heróis, podendo filtrar pelo nome e realizar paginação",
         validate: {
+          headers: Joi.object({
+            authorization: Joi.string().required(),
+          }).unknown(),
           query: Joi.object({
             skip: Joi.number().default(0),
             limit: Joi.number().default(10),
@@ -83,7 +92,8 @@ class HeroRoutes extends BaseRoutes {
         if (nome) {
           filter.nome = { $regex: nome, $options: "i" };
         }
-        return await this._databaseContext.read(filter, skip, limit);
+        const result = await this._databaseContext.read(filter, skip, limit);
+        return result;
       },
     };
   }
@@ -99,6 +109,9 @@ class HeroRoutes extends BaseRoutes {
         notes:
           "Permite a atualização de um herói, passando seu ID e todos os dados do mesmo",
         validate: {
+          headers: Joi.object({
+            authorization: Joi.string().required(),
+          }).unknown(),
           params: {
             id: Joi.string().required(),
           },
@@ -128,6 +141,9 @@ class HeroRoutes extends BaseRoutes {
         notes:
           "Permite a atualização parcial dos dados de um herói, passando seu ID e os dados a serem alterados",
         validate: {
+          headers: Joi.object({
+            authorization: Joi.string().required(),
+          }).unknown(),
           params: {
             id: Joi.string().required(),
           },
@@ -162,6 +178,9 @@ class HeroRoutes extends BaseRoutes {
         description: "Excluir Heróis",
         notes: "Permite a exclusão de um herói, passando seu ID",
         validate: {
+          headers: Joi.object({
+            authorization: Joi.string().required(),
+          }).unknown(),
           params: {
             id: Joi.string().required(),
           },
