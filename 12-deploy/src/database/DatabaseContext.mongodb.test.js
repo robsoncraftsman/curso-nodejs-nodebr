@@ -1,4 +1,4 @@
-const { equal, deepStrictEqual, ok } = require("assert");
+const { strictEqual, deepStrictEqual, ok } = require("assert");
 
 const DatabaseContext = require("./DatabaseContext");
 const MongoDbStrategy = require("./strategies/mongodb/MongoDbStrategy");
@@ -44,7 +44,7 @@ describe("DatabaseContext -> MongoDB", function () {
     const heroes = await mongoDbDatabaseContext.read({
       nome: EXISTING_HERO.nome,
     });
-    equal(heroes.length, 1);
+    strictEqual(heroes.length, 1);
     const readedHero = heroes[0];
     heroEqual(readedHero, EXISTING_HERO);
   });
@@ -53,7 +53,7 @@ describe("DatabaseContext -> MongoDB", function () {
     const SKIP = 0;
     const LIMIT = 5;
     const heroes = await mongoDbDatabaseContext.read({}, SKIP, LIMIT);
-    equal(heroes.length, LIMIT);
+    strictEqual(heroes.length, LIMIT);
   });
 
   it("#update", async () => {
@@ -62,7 +62,7 @@ describe("DatabaseContext -> MongoDB", function () {
       createdHero._id,
       UPDATE_HERO_NEW_POWER
     );
-    equal(updateResult.nModified, 1);
+    strictEqual(updateResult.nModified, 1);
     const [updatedHero] = await mongoDbDatabaseContext.read({
       _id: createdHero.id,
     });
@@ -74,6 +74,6 @@ describe("DatabaseContext -> MongoDB", function () {
     const createdHero = await mongoDbDatabaseContext.create(DELETE_HERO);
     ok(createdHero);
     const deleteResult = await mongoDbDatabaseContext.delete(createdHero._id);
-    equal(deleteResult.deletedCount, 1);
+    strictEqual(deleteResult.deletedCount, 1);
   });
 });

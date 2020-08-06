@@ -23,6 +23,11 @@ const UNEXISTING_USER = {
   password: "12345678",
 };
 
+const INVALID_PASSWORD_USER = {
+  username: "teste",
+  password: "12345678",
+};
+
 let server = {};
 
 async function login() {
@@ -59,11 +64,22 @@ describe("API Auth test suite", function () {
     ok(token.length > 10);
   });
 
-  it("#login - 401", async () => {
+  it("#login - 401 - usuário não existe", async () => {
     const result = await server.inject({
       method: "POST",
       url: "/login",
       payload: UNEXISTING_USER,
+    });
+
+    strictEqual(result.statusCode, 401);
+    strictEqual(JSON.parse(result.payload).error, "Unauthorized");
+  });
+
+  it("#login - 401 - senha incorreta", async () => {
+    const result = await server.inject({
+      method: "POST",
+      url: "/login",
+      payload: INVALID_PASSWORD_USER,
     });
 
     strictEqual(result.statusCode, 401);

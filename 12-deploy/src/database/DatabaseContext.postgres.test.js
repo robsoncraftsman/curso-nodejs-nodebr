@@ -1,4 +1,4 @@
-const { equal, deepStrictEqual, ok } = require("assert");
+const { strictEqual, deepStrictEqual, ok } = require("assert");
 
 const databaseConnection = require("./databaseConnection");
 const DatabaseContext = require("./DatabaseContext");
@@ -50,7 +50,7 @@ describe("DatabaseContext -> Postgres", function () {
     const heroes = await postgresDatabaseContext.read({
       nome: EXISTING_HERO.nome,
     });
-    equal(heroes.length, 1);
+    strictEqual(heroes.length, 1);
     const readedHero = heroes[0];
     heroEqual(readedHero, EXISTING_HERO);
   });
@@ -59,16 +59,16 @@ describe("DatabaseContext -> Postgres", function () {
     const SKIP = 0;
     const LIMIT = 5;
     const heroes = await postgresDatabaseContext.read({}, SKIP, LIMIT);
-    equal(heroes.length, LIMIT);
+    strictEqual(heroes.length, LIMIT);
   });
 
   it("#update", async () => {
     const createdHero = await postgresDatabaseContext.create(UPDATE_HERO);
-    const updateResult = await postgresDatabaseContext.update(
+    const [updateResult] = await postgresDatabaseContext.update(
       createdHero.id,
       UPDATE_HERO_NEW_POWER
     );
-    equal(updateResult, 1);
+    strictEqual(updateResult, 1);
     const [updatedHero] = await postgresDatabaseContext.read({
       id: createdHero.id,
     });
@@ -80,6 +80,6 @@ describe("DatabaseContext -> Postgres", function () {
     const createdHero = await postgresDatabaseContext.create(DELETE_HERO);
     ok(createdHero);
     const deleteResult = await postgresDatabaseContext.delete(createdHero.id);
-    equal(deleteResult, 1);
+    strictEqual(deleteResult, 1);
   });
 });

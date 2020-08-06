@@ -1,4 +1,4 @@
-const { equal, deepStrictEqual, ok } = require("assert");
+const { strictEqual, deepStrictEqual, ok } = require("assert");
 const MongoDbStrategy = require("../database/strategies/mongodb/MongoDbStrategy");
 const heroisModel = require("../database/strategies/mongodb/models/HeroisModel");
 const heroisMongoDbStrategy = new MongoDbStrategy(heroisModel);
@@ -15,7 +15,7 @@ const EXISTING_HERO = { nome: "Flash", poder: "Velocidade" };
 const NEW_HERO = { nome: "IronMan", poder: "Tech" };
 const UPDATE_HERO = { nome: "Hulk", poder: "Força" };
 const UPDATE_HERO_NEW_POWER = { poder: "Muita Força" };
-const UPDATE_HERO_PATCH = { poder: "Força atualizada" };
+const PATCH_HERO = { nome: "Nome atualizado", poder: "Força atualizada" };
 const DELETE_HERO = { nome: "SpiderMan", poder: "Spider" };
 const BATCH_HERO = { nome: "Aquaman", poder: "Água" };
 
@@ -35,7 +35,7 @@ async function findHero(id) {
       authorization: TOKEN_JWT,
     },
   });
-  equal(result.statusCode, 200);
+  strictEqual(result.statusCode, 200);
   const herois = JSON.parse(result.payload);
   ok(Array.isArray(herois));
   if (herois.length === 1) {
@@ -55,7 +55,7 @@ async function login() {
     },
   });
 
-  equal(result.statusCode, 200);
+  strictEqual(result.statusCode, 200);
   return JSON.parse(result.payload).token;
 }
 
@@ -93,10 +93,10 @@ describe("API Heroes test suite", function () {
       },
     });
     const statusCode = result.statusCode;
-    equal(statusCode, 200);
+    strictEqual(statusCode, 200);
     const herois = JSON.parse(result.payload);
     ok(Array.isArray(herois));
-    equal(herois.length, 1);
+    strictEqual(herois.length, 1);
     heroEqual(herois[0], EXISTING_HERO);
   });
 
@@ -109,7 +109,7 @@ describe("API Heroes test suite", function () {
       },
     });
     const statusCode = result.statusCode;
-    equal(statusCode, 200);
+    strictEqual(statusCode, 200);
     const herois = JSON.parse(result.payload);
     ok(Array.isArray(herois));
   });
@@ -125,10 +125,10 @@ describe("API Heroes test suite", function () {
       },
     });
     const statusCode = result.statusCode;
-    equal(statusCode, 200);
+    strictEqual(statusCode, 200);
     const herois = JSON.parse(result.payload);
     ok(Array.isArray(herois));
-    equal(herois.length, LIMIT);
+    strictEqual(herois.length, LIMIT);
   });
 
   it("listar /heroes - nome - skip 0 - limit 5", async () => {
@@ -142,10 +142,10 @@ describe("API Heroes test suite", function () {
       },
     });
     const statusCode = result.statusCode;
-    equal(statusCode, 200);
+    strictEqual(statusCode, 200);
     const herois = JSON.parse(result.payload);
     ok(Array.isArray(herois));
-    equal(herois.length, LIMIT);
+    strictEqual(herois.length, LIMIT);
   });
 
   it("listar /heroes - bad request", async () => {
@@ -156,9 +156,9 @@ describe("API Heroes test suite", function () {
         authorization: TOKEN_JWT,
       },
     });
-    equal(result.statusCode, 400);
+    strictEqual(result.statusCode, 400);
     const payload = JSON.parse(result.payload);
-    equal(payload.message, '"xpto" is not allowed');
+    strictEqual(payload.message, '"xpto" is not allowed');
   });
 
   it("listar /herois/:id - ok", async () => {
@@ -169,10 +169,10 @@ describe("API Heroes test suite", function () {
         authorization: TOKEN_JWT,
       },
     });
-    equal(result.statusCode, 200);
+    strictEqual(result.statusCode, 200);
     const herois = JSON.parse(result.payload);
     ok(Array.isArray(herois));
-    equal(herois.length, 1);
+    strictEqual(herois.length, 1);
     heroEqual(herois[0], EXISTING_HERO);
   });
 
@@ -184,10 +184,10 @@ describe("API Heroes test suite", function () {
         authorization: TOKEN_JWT,
       },
     });
-    equal(result.statusCode, 200);
+    strictEqual(result.statusCode, 200);
     const herois = JSON.parse(result.payload);
     ok(Array.isArray(herois));
-    equal(herois.length, 0);
+    strictEqual(herois.length, 0);
   });
 
   it("create /herois", async () => {
@@ -199,7 +199,7 @@ describe("API Heroes test suite", function () {
         authorization: TOKEN_JWT,
       },
     });
-    equal(result.statusCode, 200);
+    strictEqual(result.statusCode, 200);
     const heroi = JSON.parse(result.payload);
     heroEqual(heroi, NEW_HERO);
   });
@@ -214,28 +214,27 @@ describe("API Heroes test suite", function () {
       },
       payload: updatedHero,
     });
-    equal(result.statusCode, 200);
+    strictEqual(result.statusCode, 200);
     const nModified = JSON.parse(result.payload).nModified;
-    equal(nModified, 1);
+    strictEqual(nModified, 1);
     const heroi = await findHero(UPDATE_ID);
     heroEqual(heroi, updatedHero);
   });
 
   it("patch /herois/id", async () => {
-    const updatedHero = { ...UPDATE_HERO, ...UPDATE_HERO_PATCH };
     const result = await server.inject({
       method: "PATCH",
       url: `/herois/${UPDATE_ID}`,
       headers: {
         authorization: TOKEN_JWT,
       },
-      payload: UPDATE_HERO_PATCH,
+      payload: PATCH_HERO,
     });
-    equal(result.statusCode, 200);
+    strictEqual(result.statusCode, 200);
     const nModified = JSON.parse(result.payload).nModified;
-    equal(nModified, 1);
+    strictEqual(nModified, 1);
     const heroi = await findHero(UPDATE_ID);
-    heroEqual(heroi, updatedHero);
+    heroEqual(heroi, PATCH_HERO);
   });
 
   it("delete /herois/id", async () => {
@@ -246,10 +245,10 @@ describe("API Heroes test suite", function () {
         authorization: TOKEN_JWT,
       },
     });
-    equal(result.statusCode, 200);
+    strictEqual(result.statusCode, 200);
     const deletedCount = JSON.parse(result.payload).deletedCount;
-    equal(deletedCount, 1);
+    strictEqual(deletedCount, 1);
     const heroi = await findHero(DELETE_ID);
-    equal(heroi, null);
+    strictEqual(heroi, null);
   });
 });

@@ -54,13 +54,8 @@ class HeroRoutes extends BaseRoutes {
         },
       },
       handler: async (request) => {
-        try {
-          const { id } = request.params;
-          return await this._databaseContext.read({ _id: id });
-        } catch (error) {
-          console.log(error);
-          return Boom.internal();
-        }
+        const { id } = request.params;
+        return await this._databaseContext.read({ _id: id });
       },
     };
   }

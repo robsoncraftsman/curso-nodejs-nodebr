@@ -1,4 +1,4 @@
-const { equal, deepStrictEqual, ok } = require("assert");
+const { strictEqual, deepStrictEqual, ok } = require("assert");
 
 const databaseConnection = require("../../databaseConnection");
 const PostgresStrategy = require("./PostgresStrategy");
@@ -56,7 +56,7 @@ describe("PostgresStrategy", function () {
     const SKIP = 0;
     const LIMIT = 5;
     const heroes = await heroisPostgresStrategy.read({}, SKIP, LIMIT);
-    equal(heroes.length, LIMIT);
+    strictEqual(heroes.length, LIMIT);
   });
 
   it("#update", async () => {
@@ -65,7 +65,7 @@ describe("PostgresStrategy", function () {
       createdHero.id,
       UPDATE_HERO_NEW_POWER
     );
-    equal(updateCount, 1);
+    strictEqual(updateCount, 1);
     const [updatedHero] = await heroisPostgresStrategy.read({
       id: createdHero.id,
     });
@@ -77,6 +77,6 @@ describe("PostgresStrategy", function () {
     const createdHero = await heroisPostgresStrategy.create(DELETE_USER);
     ok(createdHero);
     const deleteCount = await heroisPostgresStrategy.delete(createdHero.id);
-    equal(deleteCount, 1);
+    strictEqual(deleteCount, 1);
   });
 });

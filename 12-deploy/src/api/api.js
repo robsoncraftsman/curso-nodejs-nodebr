@@ -51,12 +51,7 @@ function createServer() {
     routes: {
       validate: {
         failAction: async (request, h, error) => {
-          if (process.env.NODE_ENV === "production") {
-            console.log("Bad Request: " + error.message);
-            throw Boom.badRequest();
-          } else {
-            throw error;
-          }
+          throw error;
         },
       },
     },

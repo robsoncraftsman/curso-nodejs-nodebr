@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node -r dotenv-safe/config index.js",
-    "test": "mocha -r dotenv-safe/config \"src/**/*.test.js\"",
+    "test": "nyc --reporter=html mocha -r dotenv-safe/config --exit \"src/**/*.test.js\"",
     "dev": "nodemon -r dotenv-safe/config index.js"
   },
   "keywords": [],
@@ -28,6 +28,7 @@
     "sequelize": "^6.3.3"
   },
   "devDependencies": {
-    "mocha": "^8.0.1"
+    "mocha": "^8.0.1",
+    "nyc": "^15.1.0"
   }
 }

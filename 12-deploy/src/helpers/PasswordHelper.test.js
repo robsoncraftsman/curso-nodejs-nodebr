@@ -1,4 +1,4 @@
-const { equal, deepStrictEqual, ok } = require("assert");
+const { strictEqual, deepStrictEqual, ok } = require("assert");
 const PasswordHelper = require("./PasswordHelper");
 
 const PASSWORD = "#Minha$Senha&Forte926!";
@@ -9,7 +9,7 @@ const EXPECTED_HASH =
 describe("PasswordHelper test suite", function () {
   it("Deve retornar o hash da senha", async () => {
     const hash = await PasswordHelper.hashPassword(PASSWORD);
-    equal(hash.length, EXPECTED_HASH_LENGTH);
+    strictEqual(hash.length, EXPECTED_HASH_LENGTH);
   });
 
   it("Deve verificar que o hash está certo", async () => {
