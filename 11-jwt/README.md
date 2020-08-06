@@ -55,3 +55,13 @@ docker exec -it mongodb \
 
 docker exec -it mongodb \
  mongo herois --host localhost --port 27017 -u user -p pwd --authenticationDatabase herois
+
+# Após rodar os testes, o seguinte usuário é criado para acessso via swagger
+
+http://localhost:3000/documentation
+
+Rota (/login):
+{
+"username": "teste",
+"password": "123"
+}
