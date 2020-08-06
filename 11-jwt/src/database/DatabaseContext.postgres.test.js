@@ -1,19 +1,15 @@
 const { equal, deepStrictEqual, ok } = require("assert");
 
+const databaseConnection = require("./databaseConnection");
 const DatabaseContext = require("./DatabaseContext");
 const PostgresStrategy = require("./strategies/postgres/PostgresStrategy");
-const connectionOptions = {
-  database: "herois",
-  username: "admin",
-  password: "pwd",
-  host: "localhost",
-  dialect: "postgres",
-};
-const sequelize = PostgresStrategy.createSequelize(connectionOptions);
 const heroisModel = require("./strategies/postgres/models/HeroisModel")(
-  sequelize
+  databaseConnection.sequelize
 );
-const postgresStrategy = new PostgresStrategy(sequelize, heroisModel);
+const postgresStrategy = new PostgresStrategy(
+  databaseConnection.sequelize,
+  heroisModel
+);
 const postgresDatabaseContext = new DatabaseContext(postgresStrategy);
 
 const EXISTING_HERO = { nome: "Flash", poder: "Velocidade" };
@@ -34,7 +30,6 @@ describe("DatabaseContext -> Postgres", function () {
   this.timeout(Infinity);
 
   this.beforeAll(async () => {
-    await sequelize.authenticate();
     await postgresDatabaseContext.clear();
     await postgresDatabaseContext.create(EXISTING_HERO);
     for (let i = 1; i <= 25; i++) {
@@ -43,10 +38,6 @@ describe("DatabaseContext -> Postgres", function () {
         nome: EXISTING_HERO.nome + "_" + i,
       });
     }
-  });
-
-  this.afterAll(async () => {
-    await sequelize.close();
   });
 
   it("#create", async () => {

@@ -1,5 +1,13 @@
-const MongoDbStrategy = require("./src/database/strategies/mongodb/MongoDbStrategy");
+const databaseConnection = require("./src/database/databaseConnection");
 const api = require("./src/api/api");
 
-MongoDbStrategy.connect("mongodb://user:pwd@localhost:27217/herois");
-api.startServer();
+async function main() {
+  databaseConnection.connectToDatabase();
+  const server = await api.startServer();
+
+  server.events.on("stop", async () => {
+    databaseConnection.disconnectToDatabase();
+  });
+}
+
+main();

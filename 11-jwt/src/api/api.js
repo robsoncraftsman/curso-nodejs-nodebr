@@ -11,13 +11,27 @@ const HapiSwagger = require("hapi-swagger");
 const HapiJwt = require("hapi-auth-jwt2");
 
 const HeroRoutes = require("./routes/HeroRoutes");
+const AuthRoutes = require("./routes/AuthRoutes");
 
+const databaseConnection = require("../database/databaseConnection");
 const DatabaseContext = require("../database/DatabaseContext");
+
 const MongoDbStrategy = require("../database/strategies/mongodb/MongoDbStrategy");
 const heroisModel = require("../database/strategies/mongodb/models/HeroisModel");
-const AuthRoutes = require("./routes/AuthRoutes");
-const mongoDbStrategy = new MongoDbStrategy(heroisModel);
-const mongoDbDatabaseContext = new DatabaseContext(mongoDbStrategy);
+const heroisMongoDbStrategy = new MongoDbStrategy(heroisModel);
+const heroisMongoDbDatabaseContext = new DatabaseContext(heroisMongoDbStrategy);
+
+const PostgresStrategy = require("../database/strategies/postgres/PostgresStrategy");
+const usuariosModel = require("../database/strategies/postgres/models/UsuariosModel")(
+  databaseConnection.sequelize
+);
+const usuariosPostgresStrategy = new PostgresStrategy(
+  databaseConnection.sequelize,
+  usuariosModel
+);
+const usuariosPostgresDatabaseContext = new DatabaseContext(
+  usuariosPostgresStrategy
+);
 
 const JWT_SECRET = "963$meutokenseguro$147";
 
@@ -82,8 +96,14 @@ function configureAuthentication(server) {
 
 function configureRoutes(server) {
   server.route([
-    ...mapRoutes(new HeroRoutes(mongoDbDatabaseContext), HeroRoutes.routes()),
-    ...mapRoutes(new AuthRoutes(JWT_SECRET), AuthRoutes.routes()),
+    ...mapRoutes(
+      new HeroRoutes(heroisMongoDbDatabaseContext),
+      HeroRoutes.routes()
+    ),
+    ...mapRoutes(
+      new AuthRoutes(usuariosPostgresDatabaseContext, JWT_SECRET),
+      AuthRoutes.routes()
+    ),
   ]);
 }
 

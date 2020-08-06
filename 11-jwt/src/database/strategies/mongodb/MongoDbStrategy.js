@@ -1,24 +1,9 @@
-const mongoose = require("mongoose");
-
 const DbStrategy = require("../DbStrategy");
 
 class MongoDbStrategy extends DbStrategy {
   constructor(model) {
     super();
     this._model = model;
-  }
-
-  static async connect(url) {
-    await mongoose.connect(url, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-    return true;
-  }
-
-  static async close() {
-    await mongoose.connection.close();
-    return true;
   }
 
   async create(item) {

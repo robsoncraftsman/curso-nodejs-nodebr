@@ -4,6 +4,7 @@ const heroisModel = require("../database/strategies/mongodb/models/HeroisModel")
 const heroisMongoDbStrategy = new MongoDbStrategy(heroisModel);
 
 const api = require("./api");
+
 let server = {};
 let EXISTING_ID;
 let UPDATE_ID;
@@ -62,7 +63,8 @@ describe("API Heroes test suite", function () {
   this.timeout(Infinity);
 
   this.beforeAll(async () => {
-    await MongoDbStrategy.connect("mongodb://user:pwd@localhost:27217/herois");
+    server = await api.startServer();
+
     await heroisMongoDbStrategy.clear();
     EXISTING_ID = (await heroisMongoDbStrategy.create(EXISTING_HERO)).id;
     UPDATE_ID = (await heroisMongoDbStrategy.create(UPDATE_HERO)).id;
@@ -75,13 +77,10 @@ describe("API Heroes test suite", function () {
       });
     }
 
-    server = await api.startServer();
-
     TOKEN_JWT = await login();
   });
 
   this.afterAll(async () => {
-    await MongoDbStrategy.close();
     await server.stop();
   });
 

@@ -1,16 +1,35 @@
 const { ok, strictEqual, deepStrictEqual } = require("assert");
 const api = require("./api");
 
+const databaseConnection = require("../database/databaseConnection");
+const PostgresStrategy = require("../database/strategies/postgres/PostgresStrategy");
+const usuariosModel = require("../database/strategies/postgres/models/UsuariosModel")(
+  databaseConnection.sequelize
+);
+const usuariosPostgresStrategy = new PostgresStrategy(
+  databaseConnection.sequelize,
+  usuariosModel
+);
+
+const PasswordHelper = require("../helpers/PasswordHelper");
+
+const EXISTING_USER = {
+  username: "teste",
+  password: "123",
+};
+
+const UNEXISTING_USER = {
+  username: "nao_existe",
+  password: "12345678",
+};
+
 let server = {};
 
 async function login() {
   const result = await server.inject({
     method: "POST",
     url: "/login",
-    payload: {
-      username: "teste",
-      password: "123",
-    },
+    payload: EXISTING_USER,
   });
 
   strictEqual(result.statusCode, 200);
@@ -21,6 +40,12 @@ describe("API Auth test suite", function () {
   this.timeout(Infinity);
 
   this.beforeAll(async () => {
+    await usuariosPostgresStrategy.clear();
+    await usuariosPostgresStrategy.create({
+      username: EXISTING_USER.username,
+      password: await PasswordHelper.hashPassword(EXISTING_USER.password),
+    });
+
     server = await api.startServer();
   });
 
@@ -38,10 +63,7 @@ describe("API Auth test suite", function () {
     const result = await server.inject({
       method: "POST",
       url: "/login",
-      payload: {
-        username: "nao_existe",
-        password: "12345678",
-      },
+      payload: UNEXISTING_USER,
     });
 
     strictEqual(result.statusCode, 401);

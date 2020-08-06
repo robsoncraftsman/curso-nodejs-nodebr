@@ -22,7 +22,6 @@ describe("MongoDbStrategy", function () {
   this.timeout(Infinity);
 
   this.beforeAll(async () => {
-    await MongoDbStrategy.connect("mongodb://user:pwd@localhost:27217/herois");
     await heroisMongoDbStrategy.clear();
     await heroisMongoDbStrategy.create(EXISTING_HERO);
     for (let i = 1; i <= 25; i++) {
@@ -31,10 +30,6 @@ describe("MongoDbStrategy", function () {
         nome: EXISTING_HERO.nome + "_" + i,
       });
     }
-  });
-
-  this.afterAll(async () => {
-    await MongoDbStrategy.close();
   });
 
   it("#create", async () => {

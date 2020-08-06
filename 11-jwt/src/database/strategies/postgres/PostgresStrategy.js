@@ -1,24 +1,10 @@
 const DbStrategy = require("../DbStrategy");
-const Sequelize = require("sequelize");
 
 class PostgresStrategy extends DbStrategy {
   constructor(sequelize, model) {
     super();
     this._sequelize = sequelize;
     this._model = model;
-  }
-
-  static createSequelize(options) {
-    return new Sequelize(options.database, options.username, options.password, {
-      host: options.host,
-      dialect: options.dialect,
-      quoteIdentifiers: false,
-      logging: false,
-      define: {
-        freezeTableName: true,
-        timestamps: false,
-      },
-    });
   }
 
   async create(item) {

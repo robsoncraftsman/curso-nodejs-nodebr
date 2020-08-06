@@ -24,7 +24,6 @@ describe("DatabaseContext -> MongoDB", function () {
   this.timeout(Infinity);
 
   this.beforeAll(async () => {
-    await MongoDbStrategy.connect("mongodb://user:pwd@localhost:27217/herois");
     await mongoDbDatabaseContext.clear();
     await mongoDbDatabaseContext.create(EXISTING_HERO);
     for (let i = 1; i <= 25; i++) {
@@ -33,10 +32,6 @@ describe("DatabaseContext -> MongoDB", function () {
         nome: EXISTING_HERO.nome + "_" + i,
       });
     }
-  });
-
-  this.afterAll(async () => {
-    await MongoDbStrategy.close();
   });
 
   it("#create", async () => {
